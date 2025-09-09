@@ -1,41 +1,39 @@
-// import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button'
 import { Link } from 'react-router'
-import { addNewShow, returnPlatform } from '../requests'
-// import { updateShow } from '../requests';
+import { addNewShowJson, returnNextEpisodeSearch, returnPlatform } from '../requests'
 
 export default function Result({ showData }) {
-  // const [tvShow, setTvShow] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
+  const [nextEpisode, setNextEpisode] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-
-  // useEffect(() => {
-  //   const retreiveTvShows = async () => {
-  //     try {
-  //       const response = await updateShow(showData._id);
-  //       console.log(response);
-  //       setTvShow(response);
-  //     } catch (err) {
-  //       setError('Failed to retreive TV Show');
-  //       console.error(err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   retreiveTvShows();
-  // }, []);
-
-  // if (loading) return <div>Loading TV Show ...</div>;
-  // if (error) return <div>{error}</div>;
-
+  useEffect(() => {
+    const retreiveTvShows = async (show) => {
+      try {
+        const response = await returnNextEpisodeSearch(show);
+        console.log(response);
+        setNextEpisode(response);
+      } catch (err) {
+        setError('Failed to retreive TV Shows');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    retreiveTvShows(showData.show);
+  }, [showData.show]);
+  
   const addTvShow = () => {
-    addNewShow(showData.show.id)
+    addNewShowJson(showData.show)
   }
+
+  if (loading) return <div>Loading next episodes ...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <li>
-      <Link to={`/tvshow/${showData._id}/`}>{showData.show.name}</Link> - {returnPlatform(showData.show)} - {showData.nextEpisode}
+      <Link to={`/tvshow/${showData.show.id}/`}>{showData.show.name}</Link> - {returnPlatform(showData.show)} - {nextEpisode}
       <Button variant="primary" onClick={addTvShow}>
         Add Show
       </Button>
@@ -43,14 +41,66 @@ export default function Result({ showData }) {
   )
 }
 
-
-// {
-//   "_id":"68b4784c4cc9224a54fab221",
-//   "title":"Slow Horses",
-//   "tvMazeID":45039,
-//   "scheduleDay":["Wednesday"],
-//   "platform":"Apple TV+",
-//   "imageLink":"https://static.tvmaze.com/uploads/images/medium_portrait/531/1328385.jpg",
-//   "nextEpisode":"2025-09-24T00:00:00.000Z",
-//   "__v":0
+// show: {
+//     "id": 32158,
+//     "url": "https://www.tvmaze.com/shows/32158/fbi",
+//     "name": "FBI",
+//     "type": "Scripted",
+//     "language": "English",
+//     "genres": [
+//         "Drama",
+//         "Crime"
+//     ],
+//     "status": "Running",
+//     "runtime": 60,
+//     "averageRuntime": 60,
+//     "premiered": "2018-09-25",
+//     "ended": null,
+//     "officialSite": "https://www.cbs.com/shows/fbi/",
+//     "schedule": {
+//         "time": "21:00",
+//         "days": [
+//             "Monday"
+//         ]
+//     },
+//     "rating": {
+//         "average": 7.1
+//     },
+//     "weight": 100,
+//     "network": {
+//         "id": 2,
+//         "name": "CBS",
+//         "country": {
+//             "name": "United States",
+//             "code": "US",
+//             "timezone": "America/New_York"
+//         },
+//         "officialSite": "https://www.cbs.com/"
+//     },
+//     "webChannel": null,
+//     "dvdCountry": null,
+//     "externals": {
+//         "tvrage": null,
+//         "thetvdb": 350071,
+//         "imdb": "tt7491982"
+//     },
+//     "image": {
+//         "medium": "https://static.tvmaze.com/uploads/images/medium_portrait/538/1345374.jpg",
+//         "original": "https://static.tvmaze.com/uploads/images/original_untouched/538/1345374.jpg"
+//     },
+//     "summary": "<p><b>FBI</b> is a fast-paced drama about the inner workings of the New York Field Office of the Federal Bureau of Investigation. These first-class agents, including Special Agent Maggie Bell and her partner, Special Agent Omar Adom 'OA' Zidan, bring all their talents, intellect and technical expertise on major cases in order to keep New York and the country safe.</p>",
+//     "updated": 1756170790,
+//     "_links": {
+//         "self": {
+//             "href": "https://api.tvmaze.com/shows/32158"
+//         },
+//         "previousepisode": {
+//             "href": "https://api.tvmaze.com/episodes/3181015",
+//             "name": "A New Day"
+//         },
+//         "nextepisode": {
+//             "href": "https://api.tvmaze.com/episodes/3301104",
+//             "name": "Takeover"
+//         }
+//     }
 // }

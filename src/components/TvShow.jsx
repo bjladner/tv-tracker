@@ -1,5 +1,6 @@
 // import { useState, useEffect } from 'react';
 import { Link } from 'react-router'
+import { returnNextEpisode } from '../requests';
 // import { updateShow } from '../requests';
 
 export default function TvShow({ showData }) {
@@ -29,7 +30,7 @@ export default function TvShow({ showData }) {
 
   return (
     <li>
-      <Link to={`/tvshow/${showData._id}/`}>{showData.title}</Link> - {showData.platform} - {showData.nextEpisode}
+      <Link to={`/tvshow/${showData._id}/`}>{showData.title}</Link> - {showData.platform} - {returnNextEpisode(showData)}
     </li>
   )
 }

@@ -1,10 +1,22 @@
 import axios from 'axios'
 
 const baseUrl = 'http://localhost:3010'
+const tvMazeAPI = 'https://api.tvmaze.com';
 
 export async function addNewShow(showID) {
   try {
     const response = await axios.post(`${baseUrl}/api/tvshow/${showID}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function addNewShowJson(showData) {
+  try {
+    console.log(showData);
+    const response = await axios.post(`${baseUrl}/api/tvshow`, showData);
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -72,11 +84,30 @@ export function returnPlatform(searchData) {
   }
 }
 
-export async function getNextEpisode(showData) {
-  if (showData._links.nextepisode) {
-    const nextEpisodeData = await axios.get(showData._links.nextepisode.href);
-    return nextEpisodeData.data.airdate;
+export function returnNextEpisode(showData) {
+    if (showData.nextEpisode) {
+      return new Date(showData.nextEpisode).toDateString();
+    } else {
+      return "No Scheduled Episode";
+    }
+  }
+
+export async function returnNextEpisodeSearch(searchData) {
+  if (searchData._links.nextepisode) {
+    const nextEpisodeData = await axios.get(searchData._links.nextepisode.href);
+    return new Date(nextEpisodeData.data.airdate).toDateString();
   } else {
-    return "N/A";
+    return "No Scheduled Episode";
+  }
+}
+
+export async function tvShowResults(showName) {
+  try {
+    const response = await axios.get(`${tvMazeAPI}/search/shows?q=${showName}`)
+    console.log(response.data);
+    console.log(`Found ${response.data.length} shows about ${showName}`);
+    return response.data;
+  } catch(error) {
+    console.log(error);
   }
 }

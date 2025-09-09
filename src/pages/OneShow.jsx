@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button'
-import { getOneShow, updateShow } from '../requests';
+import { deleteShow, getOneShow, returnNextEpisode, updateShow } from '../requests';
 
 
 export default function OneShow() {
@@ -42,6 +42,11 @@ export default function OneShow() {
     }
   };
 
+  const deleteOneShow = async () => {
+    deleteShow(tvShow._id)
+    navigate(`/`)
+  }
+
   const returnToMenu = () => {
     navigate(`/`)
   }
@@ -58,11 +63,14 @@ export default function OneShow() {
           <Image src={tvShow.imageLink} rounded />
         </Col>
       </Row>
-      Next Episode: {tvShow.nextEpisode}
+      Next Episode: {returnNextEpisode(tvShow)}
       <Row>
         <Col xs={6} md={4}>
           <Button variant="primary" onClick={refreshData}>
             Refresh Data
+          </Button>
+          <Button variant="danger" onClick={deleteOneShow}>
+            Delete Show
           </Button>
           <Button variant="primary" onClick={returnToMenu}>
             All Shows

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { returnSearchResults } from '../requests';
+import { tvShowResults } from '../requests';
 import { useParams, useNavigate } from "react-router";
 import Button from 'react-bootstrap/Button'
 import Result from '../components/Result';
@@ -16,8 +16,7 @@ export default function SearchResults() {
     const retreiveTvShows = async (showName) => {
       try {
         console.log(showName);
-        const response = await returnSearchResults(showName);
-        console.log(response);
+        const response = await tvShowResults(showName);
         setSearchResults(response);
       } catch (err) {
         setError('Failed to retreive TV Show results');
@@ -42,7 +41,6 @@ export default function SearchResults() {
       <h2>List of matching shows:</h2>
         <ul>
           {searchResults.map((data, index) => (
-            // <li key={index}>Search Result {index}: {data.show.name}</li>
             <Result key={index} showData={data} />
           ))}
         </ul>
