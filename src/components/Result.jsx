@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button'
 import { Link } from 'react-router'
 import { addNewShowJson, returnNextEpisodeSearch, returnPlatform } from '../requests'
 
-export default function Result({ showData }) {
+export default function Result({ showData, alertProps }) {
   const [nextEpisode, setNextEpisode] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,9 +24,22 @@ export default function Result({ showData }) {
     retreiveTvShows(showData.show);
   }, [showData.show]);
   
-  const addTvShow = () => {
+  const addTvShow = async () => {
     addNewShowJson(showData.show)
-  }
+    try {
+      await addNewShowJson(showData.show);
+      alertProps.setAlertVariant("success");
+      alertProps.setAlertMessage(`${showData.show.name} successfully added!`);
+      alertProps.showAlert();
+    } catch (err) {
+      alertProps.setAlertVariant("danger");
+      alertProps.setAlertMessage(`Failed to add ${showData.show.name}!`);
+      alertProps.showAlert();
+      // setError(`Failed to update ${showData.name}`);
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }  }
 
   if (loading) return <div>Loading next episodes ...</div>;
   if (error) return <div>{error}</div>;

@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router";
 import Button from 'react-bootstrap/Button'
 import Result from '../components/Result';
 
-export default function SearchResults() {
+export default function SearchResults({ alertProps }) {
   const { showName } = useParams();
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +41,7 @@ export default function SearchResults() {
       <h2>List of matching shows:</h2>
         <ul>
           {searchResults.map((data, index) => (
-            <Result key={index} showData={data} />
+            <Result key={index} showData={data} alertProps={alertProps} />
           ))}
         </ul>
       <h2>End of matching shows</h2>

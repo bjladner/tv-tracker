@@ -57,6 +57,7 @@ export async function updateShow(showID) {
 export async function deleteShow(showID) {
   try {
     const response = await axios.delete(`${baseUrl}/api/tvshow/${showID}`);
+    console.log(`Deleting finished.`)
     console.log(response.data);
     return response.data;
   } catch (error) {

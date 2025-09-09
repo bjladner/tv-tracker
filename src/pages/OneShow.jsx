@@ -6,14 +6,18 @@ import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button'
 import { deleteShow, getOneShow, returnNextEpisode, updateShow } from '../requests';
+// import AppAlert from '../components/AppAlert';
 
 
-export default function OneShow() {
+export default function OneShow({ alertProps }) {
   const { showID } = useParams();
   const [tvShow, setTvShow] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate()
+  // const [visibleAlert, setVisibleAlert] = useState(false);
+  // const [alertVariant, setAlertVariant] = useState("");
+  // const [alertMessage, setAlertMessage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const retreiveTvShow = async () => {
@@ -31,11 +35,24 @@ export default function OneShow() {
     retreiveTvShow();
   }, [showID]);
   
+  // const showAlert = ()=> {
+  //   setVisibleAlert(true)
+  //   setTimeout( () => {
+  //     setVisibleAlert(false)
+  //   }, 5000);
+  // }
+
   const refreshData = async () => {
     try {
       await updateShow(showID);
+      alertProps.setAlertVariant("success");
+      alertProps.setAlertMessage(`${tvShow.title} successfully updated!`);
+      alertProps.showAlert();
     } catch (err) {
-      setError('Failed to update TV Show');
+      alertProps.setAlertVariant("danger");
+      alertProps.setAlertMessage(`Failed to update ${tvShow.title}!`);
+      alertProps.showAlert();
+      // setError(`Failed to update ${tvShow.title}`);
       console.error(err);
     } finally {
       setLoading(false);
@@ -43,8 +60,22 @@ export default function OneShow() {
   };
 
   const deleteOneShow = async () => {
-    deleteShow(tvShow._id)
-    navigate(`/`)
+    try {
+      console.log(`Deleting ${tvShow.title}`)
+      await deleteShow(tvShow._id);
+      alertProps.setAlertVariant("success");
+      alertProps.setAlertMessage(`${tvShow.title} successfully deleted!`);
+      alertProps.showAlert();
+      navigate(`/`)
+    } catch (err) {
+      alertProps.setAlertVariant("danger");
+      alertProps.setAlertMessage(`Failed to delete ${tvShow.title}!`);
+      alertProps.showAlert();
+      // setError(`Failed to delete ${tvShow.title}`);
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const returnToMenu = () => {
@@ -56,28 +87,30 @@ export default function OneShow() {
   
   return (
     <div className="text-white">
-    <Container>
-      {tvShow.title} - {tvShow.platform}
-      <Row>
-        <Col xs={6} md={4}>
-          <Image src={tvShow.imageLink} rounded />
-        </Col>
-      </Row>
-      Next Episode: {returnNextEpisode(tvShow)}
-      <Row>
-        <Col xs={6} md={4}>
-          <Button variant="primary" onClick={refreshData}>
-            Refresh Data
-          </Button>
-          <Button variant="danger" onClick={deleteOneShow}>
-            Delete Show
-          </Button>
-          <Button variant="primary" onClick={returnToMenu}>
-            All Shows
-          </Button>
-        </Col>
-      </Row>
-    </Container>
+      {/* {visibleAlert && <AppAlert alertVariant={alertVariant} alertMessage={alertMessage} />} */}
+      {/* <AppAlert alertVariant={alertVariant} alertMessage={alertMessage} /> */}
+      <Container>
+        {tvShow.title} - {tvShow.platform}
+        <Row>
+          <Col xs={6} md={4}>
+            <Image src={tvShow.imageLink} rounded />
+          </Col>
+        </Row>
+        Next Episode: {returnNextEpisode(tvShow)}
+        <Row>
+          <Col xs={6} md={4}>
+            <Button variant="primary" onClick={refreshData}>
+              Refresh Data
+            </Button>
+            <Button variant="danger" onClick={deleteOneShow}>
+              Delete Show
+            </Button>
+            <Button variant="primary" onClick={returnToMenu}>
+              All Shows
+            </Button>
+          </Col>
+        </Row>
+      </Container>
     </div>
   )
 }

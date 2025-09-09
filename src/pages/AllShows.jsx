@@ -7,7 +7,6 @@ export default function AllShows() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-
   useEffect(() => {
     const retreiveTvShows = async () => {
       try {
@@ -23,6 +22,7 @@ export default function AllShows() {
     };
     retreiveTvShows();
   }, []);
+
 
   if (loading) return <div>Loading TV Shows ...</div>;
   if (error) return <div>{error}</div>;
