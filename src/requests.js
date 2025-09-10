@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3010'
+const baseUrl = import.meta.env.VITE_API_URL|| 'http://localhost:3000';
 const tvMazeAPI = 'https://api.tvmaze.com';
 
 export async function addNewShow(showID) {
