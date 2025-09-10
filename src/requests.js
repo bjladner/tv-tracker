@@ -26,6 +26,7 @@ export async function addNewShowJson(showData) {
 
 export async function getAllShows() {
   try {
+    console.log(baseUrl)
     const response = await axios.get(`${baseUrl}/api/tvshows`);
     console.log(response.data);
     return response.data;
