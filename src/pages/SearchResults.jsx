@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { tvShowResults } from '../requests';
 import { useParams, useNavigate } from "react-router";
-import Button from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button';
+import ListGroup from 'react-bootstrap/ListGroup';
 import Result from '../components/Result';
 
 export default function SearchResults({ alertProps }) {
@@ -37,14 +38,12 @@ export default function SearchResults({ alertProps }) {
 
   return (
     <div className="container d-flex flex-column align-items-start justify-content-center w-100 py-5 text-white">
-      <h1>Search Results for {showName}</h1>
-      <h2>List of matching shows:</h2>
-        <ul>
-          {searchResults.map((data, index) => (
-            <Result key={index} showData={data} alertProps={alertProps} />
-          ))}
-        </ul>
-      <h2>End of matching shows</h2>
+      <h3>Search Results for {showName}</h3>
+      <ListGroup className="bg-dark text-white">
+        {searchResults.map((data, index) => (
+          <Result key={index} showData={data} alertProps={alertProps} />
+        ))}
+      </ ListGroup>
       <Button variant="primary" onClick={returnToMenu}>
         All Shows
       </Button>

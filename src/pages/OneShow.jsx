@@ -6,7 +6,6 @@ import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button'
 import { deleteShow, getOneShow, returnNextEpisode, updateShow } from '../requests';
-// import AppAlert from '../components/AppAlert';
 
 
 export default function OneShow({ alertProps }) {
@@ -14,9 +13,6 @@ export default function OneShow({ alertProps }) {
   const [tvShow, setTvShow] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // const [visibleAlert, setVisibleAlert] = useState(false);
-  // const [alertVariant, setAlertVariant] = useState("");
-  // const [alertMessage, setAlertMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,13 +31,6 @@ export default function OneShow({ alertProps }) {
     retreiveTvShow();
   }, [showID]);
   
-  // const showAlert = ()=> {
-  //   setVisibleAlert(true)
-  //   setTimeout( () => {
-  //     setVisibleAlert(false)
-  //   }, 5000);
-  // }
-
   const refreshData = async () => {
     try {
       await updateShow(showID);
@@ -87,24 +76,34 @@ export default function OneShow({ alertProps }) {
   
   return (
     <div className="text-white">
-      {/* {visibleAlert && <AppAlert alertVariant={alertVariant} alertMessage={alertMessage} />} */}
-      {/* <AppAlert alertVariant={alertVariant} alertMessage={alertMessage} /> */}
       <Container>
-        {tvShow.title} - {tvShow.platform}
         <Row>
-          <Col xs={6} md={4}>
+          <Col>
+            <h3>{tvShow.title} - {tvShow.platform}</h3>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
             <Image src={tvShow.imageLink} rounded />
           </Col>
         </Row>
-        Next Episode: {returnNextEpisode(tvShow)}
         <Row>
-          <Col xs={6} md={4}>
+          <Col>
+            <h4>Next Episode: {returnNextEpisode(tvShow)}</h4>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
             <Button variant="primary" onClick={refreshData}>
               Refresh Data
             </Button>
+          </Col>
+          <Col>
             <Button variant="danger" onClick={deleteOneShow}>
               Delete Show
             </Button>
+          </Col>
+          <Col>
             <Button variant="primary" onClick={returnToMenu}>
               All Shows
             </Button>

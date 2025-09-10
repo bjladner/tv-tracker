@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getAllShows } from '../requests';
+import ListGroup from 'react-bootstrap/ListGroup';
 import TvShow from '../components/TvShow';
 
 export default function AllShows() {
@@ -29,11 +30,11 @@ export default function AllShows() {
 
   return (
     <div className="container d-flex flex-column align-items-start justify-content-center w-100 py-5 text-white">
-      <ul>
+      <ListGroup className="bg-dark text-white">
         {tvShows.map((data, index) => (
           <TvShow key={index} showData={data} />
         ))}
-      </ul>
+      </ ListGroup>
     </div>
   )
 }

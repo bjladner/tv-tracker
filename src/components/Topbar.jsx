@@ -1,5 +1,7 @@
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form';
 import { useState } from 'react';
@@ -22,19 +24,25 @@ export default function Topbar() {
   return (
     <Navbar sticky="top">
       <Container>
-        <Navbar.Brand className='text-white' href="/">TV Show Tracker</Navbar.Brand>
+        <Row>
+          <Col>
+            <Navbar.Brand className='text-white' href="/">TV Show Tracker</Navbar.Brand>
+          </Col>
+          <Col>
+            <Form className="d-flex" onSubmit={startSearch}>
+              <Form.Control
+                type="text"
+                name="search"
+                placeholder="Search TV Shows"
+                className="me-2"
+                value={userInput}
+                onChange={onChange}
+              />
+              <Button type="submit">Submit</Button>
+            </Form>
+          </Col>
+        </Row>
       </Container>
-      <Form className="d-flex" onSubmit={startSearch}>
-        <Form.Control
-          type="text"
-          name="search"
-          placeholder="Search TV Shows"
-          className="me-2"
-          value={userInput}
-          onChange={onChange}
-        />
-        <Button type="submit">Submit</Button>
-      </Form>
     </Navbar>
   )
 }

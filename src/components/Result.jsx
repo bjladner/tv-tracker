@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/Button'
-import { Link } from 'react-router'
+import Button from 'react-bootstrap/Button';
+import ListGroup from 'react-bootstrap/ListGroup';
+import { Link } from 'react-router';
 import { addNewShowJson, returnNextEpisodeSearch, returnPlatform } from '../requests'
 
 export default function Result({ showData, alertProps }) {
@@ -9,7 +10,7 @@ export default function Result({ showData, alertProps }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const retreiveTvShows = async (show) => {
+    const getNextEpisode = async (show) => {
       try {
         const response = await returnNextEpisodeSearch(show);
         console.log(response);
@@ -21,16 +22,22 @@ export default function Result({ showData, alertProps }) {
         setLoading(false);
       }
     };
-    retreiveTvShows(showData.show);
+    getNextEpisode(showData.show);
   }, [showData.show]);
   
   const addTvShow = async () => {
-    addNewShowJson(showData.show)
     try {
-      await addNewShowJson(showData.show);
-      alertProps.setAlertVariant("success");
-      alertProps.setAlertMessage(`${showData.show.name} successfully added!`);
-      alertProps.showAlert();
+      const response = await addNewShowJson(showData.show);
+      console.log(response);
+      if (response.status === "exists") {
+        alertProps.setAlertVariant("warning");
+        alertProps.setAlertMessage(`${showData.show.name} already exists!`);
+        alertProps.showAlert();
+      } else {
+        alertProps.setAlertVariant("success");
+        alertProps.setAlertMessage(`${showData.show.name} successfully added!`);
+        alertProps.showAlert();
+      }
     } catch (err) {
       alertProps.setAlertVariant("danger");
       alertProps.setAlertMessage(`Failed to add ${showData.show.name}!`);
@@ -39,18 +46,19 @@ export default function Result({ showData, alertProps }) {
       console.error(err);
     } finally {
       setLoading(false);
-    }  }
+    }  
+  }
 
   if (loading) return <div>Loading next episodes ...</div>;
   if (error) return <div>{error}</div>;
 
   return (
-    <li>
-      <Link to={`/tvshow/${showData.show.id}/`}>{showData.show.name}</Link> - {returnPlatform(showData.show)} - {nextEpisode}
+    <ListGroup.Item className="bg-dark text-white">
+      <Link to={`/search/show/${showData.show.id}/`}>{showData.show.name}</Link> - {returnPlatform(showData.show)} - {nextEpisode}
       <Button variant="primary" onClick={addTvShow}>
         Add Show
       </Button>
-    </li>
+    </ ListGroup.Item>
   )
 }
 
